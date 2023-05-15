@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public enum StateHand
 {
@@ -16,6 +19,7 @@ public class InputController : MonoBehaviour
     [SerializeField] private InputActionProperty pinchValueInputAction;
     [SerializeField] private InputActionProperty gripValueInputAction;
     [SerializeField] private InputActionProperty touchPadValueInputAction;
+    [SerializeField] private ActionBasedController controller;
     private List<StateInput> statesInput = new();
     private StateHand currentStateHand;
 

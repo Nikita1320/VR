@@ -13,7 +13,7 @@ public class IdleStateInput : StateInput
     {
         inputController = controllableObject;
         hand = controllableObject.gameObject;
-        animator = hand.GetComponent<Animator>();
+        animator = hand.GetComponentInChildren<Animator>();
         interactionManager = hand.GetComponent<InteractionManager>();
         movementController = hand.GetComponentInParent<MovementController>();
     }
@@ -24,27 +24,26 @@ public class IdleStateInput : StateInput
         {
             if (interactionManager.IsInteracts == false)
             {
-                interactionManager.CheckInteractableObject(out GameObject interactable);
-                if (interactable != null)
+                if (interactionManager.TryInteract())
                 {
-                    if (interactionManager.ToInteract(interactable.GetComponent<Interactable>()))
-                    {
-                        inputController.ChangeState(StateHand.InteractsWithObject);
-                        return;
-                    }
+                    inputController.ChangeState(StateHand.InteractsWithObject);
+                    return;
                 }
             }
         }
-        Vector2 direction = inputController.TouchPadValueInputAction.action.ReadValue<Vector2>();
-        if (direction != Vector2.zero)
+        if (inputController.TouchPadValueInputAction != null)
         {
-            movementController.Move(direction);
+            Vector2 direction = inputController.TouchPadValueInputAction.action.ReadValue<Vector2>();
+            if (direction != Vector2.zero)
+            {
+                movementController.Move(direction);
+            }
+
+            float triggerValue = inputController.PinchInputAction.action.ReadValue<float>();
+            animator.SetFloat("Trigger", triggerValue);
+
+            float gripValue = inputController.GripInputAction.action.ReadValue<float>();
+            animator.SetFloat("Grip", gripValue);
         }
-
-        float triggerValue = inputController.PinchInputAction.action.ReadValue<float>();
-        animator.SetFloat("Trigger", triggerValue);
-
-        float gripValue = inputController.GripInputAction.action.ReadValue<float>();
-        animator.SetFloat("Grip", gripValue);
     }
 }

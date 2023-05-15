@@ -8,12 +8,13 @@ public class InteractsStateInput : StateInput
     private InputController inputController;
     private InteractionManager interactionManager;
     private Animator animator;
+    private float valueBrokeLink = 0.1f;
     public override void Init(InputController controllableObject)
     {
         hand = controllableObject.gameObject;
         inputController = hand.GetComponent<InputController>();
         interactionManager = hand.GetComponent<InteractionManager>();
-        animator = hand.GetComponent<Animator>();
+        animator = hand.GetComponentInChildren<Animator>();
     }
 
     public override void Update()
@@ -25,9 +26,9 @@ public class InteractsStateInput : StateInput
                 animator.SetFloat("Trigger", 1);
             }
         }
-        if (inputController.PinchValueInputAction.action.IsPressed())
+        float powerPinch = inputController.PinchValueInputAction.action.ReadValue<float>();
+        if (powerPinch <= valueBrokeLink)
         {
-            float powerPinch = inputController.PinchValueInputAction.action.ReadValue<float>();
             if (interactionManager.UpdateInteractWithObject(powerPinch))
             {
                 animator.SetFloat("Grab", powerPinch);

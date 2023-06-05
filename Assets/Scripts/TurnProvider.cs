@@ -20,7 +20,8 @@ public class TurnProvider : MonoBehaviour
         Vector2 rotateDirection = touchPadValueInputAction.action.ReadValue<Vector2>();
         if (rotateDirection != Vector2.zero)
         {
-            xrOrigin.transform.rotation = Quaternion.Lerp(xrOrigin.transform.rotation, Quaternion.Euler(0, xrOrigin.transform.rotation.y + 90 * rotateDirection.y, 0), rotateSpeed);
+            var angle = Quaternion.Euler(0, 180 * rotateDirection.x, 0);
+            xrOrigin.transform.rotation = Quaternion.Lerp(xrOrigin.transform.rotation, xrOrigin.transform.rotation * angle, rotateSpeed);
         }
     }
 }

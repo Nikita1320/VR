@@ -3,27 +3,26 @@ using System.Collections.Generic;
 using Unity.XR.CoreUtils;
 using UnityEditor.XR.LegacyInputHelpers;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class HeightCharacterController : MonoBehaviour
 {
-    [SerializeField] private CharacterController characterCollider;
+    [SerializeField] private InputActionProperty headPosition;
+    [SerializeField] private CharacterController characterController;
     [SerializeField] private XROrigin xROrigin;
     [SerializeField] private float defaultCameraOffset = 1.7f;
 
     private void Start()
     {
-        characterCollider = GetComponent<CharacterController>();
-        if (xROrigin.CurrentTrackingOriginMode != UnityEngine.XR.TrackingOriginModeFlags.Floor)
-        {
-            xROrigin.CameraYOffset = defaultCameraOffset;
-        }
+        characterController = GetComponent<CharacterController>();
     }
     private void LateUpdate()
     {
-        if (xROrigin.CurrentTrackingOriginMode == UnityEngine.XR.TrackingOriginModeFlags.Floor)
+        float yPos = headPosition.action.ReadValue<Vector3>().y;
+        if (Mathf.Abs(characterController.height - yPos) > 0.2)
         {
-            characterCollider.center = new Vector3(0, xROrigin.CameraYOffset / 2, 0);
-            characterCollider.height = xROrigin.CameraYOffset;
+            characterController.center = new Vector3(0, yPos / 2, 0);
+            characterController.height = yPos;
         }
     }
 }

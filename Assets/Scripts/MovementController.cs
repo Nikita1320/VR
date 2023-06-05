@@ -35,7 +35,8 @@ public class MovementController : MonoBehaviour
 
     public void Move(Vector2 direction)
     {
-        Vector3 moveDirection = vrCamera.transform.right * direction.x + vrCamera.transform.forward * direction.y;
+        Vector3 cameraDirection = vrCamera.transform.right * direction.x + vrCamera.transform.forward * direction.y;
+        Vector3 moveDirection = new Vector3(cameraDirection.x, transform.position.y, cameraDirection.z);
 
         characterController.Move(moveDirection * moveSpeed * Time.deltaTime);
     }
